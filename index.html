@@ -1,318 +1,1192 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset='UTF-8'>
-<title>Bulimbo Mole Baseline Analysis</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bulimbo Mole Baseline Dashboard</title>
+
 <style>
-body { font-family: Arial, sans-serif; max-width: 1100px; margin: 40px auto; line-height: 1.55; color: #222; }
-h1 { margin-bottom: 5px; }
-h2 { border-bottom: 2px solid #ddd; padding-bottom: 5px; margin-top: 35px; }
-table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-th { background: #f2f2f2; }
-.callout {
-  padding: 18px;
-  background: #f7f9f7;
-  border-left: 6px solid #2E7D32;
-  margin: 20px 0;
-  border-radius: 4px;
+
+:root{
+    --green:#1B5E20;
+    --green2:#2E7D32;
+    --light:#E8F5E9;
+    --lighter:#F5FAF5;
+    --border:#D9E2D9;
+    --text:#263238;
+    --muted:#68737D;
+    --white:#ffffff;
+    --shadow:0 4px 18px rgba(0,0,0,.08);
 }
 
-.key-message {
-  padding: 18px;
-  background: #eef6ee;
-  border: 1px solid #c8e6c9;
-  border-radius: 6px;
-  margin: 20px 0;
+*{
+    box-sizing:border-box;
 }
 
-.small {
-  color: #666;
-  font-size: 0.9em;
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#F4F7F4;
+    color:var(--text);
 }
 
-h1 {
-  color: #1B5E20;
-  margin-bottom: 5px;
+.container{
+    max-width:1250px;
+    margin:auto;
+    padding:25px;
 }
 
-h2 {
-  color: #2E7D32;
-  border-bottom: 2px solid #C8E6C9;
-  padding-bottom: 6px;
-  margin-top: 35px;
+/* HEADER */
+
+.header{
+    background:linear-gradient(135deg,#1B5E20,#388E3C);
+    color:white;
+    padding:35px;
+    border-radius:16px;
+    margin-bottom:25px;
+    box-shadow:var(--shadow);
 }
 
-h3 {
-  color: #33691E;
+.header h1{
+    margin:0 0 8px;
+    font-size:32px;
 }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 15px 0;
+.header p{
+    margin:4px 0;
+    opacity:.9;
 }
 
-th {
-  background: #2E7D32;
-  color: white;
-  padding: 9px;
+.badge{
+    display:inline-block;
+    margin-top:15px;
+    padding:7px 14px;
+    background:rgba(255,255,255,.15);
+    border-radius:20px;
+    font-size:13px;
 }
 
-td {
-  border: 1px solid #ddd;
-  padding: 8px;
+/* FILTERS */
+
+.filters{
+    background:white;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    margin-bottom:25px;
 }
 
-tr:nth-child(even) {
-  background: #f7f7f7;
+.filters h3{
+    margin-top:0;
+    color:var(--green);
 }
-.small { color: #666; font-size: 0.9em; }
+
+.filter-row{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.filter-group{
+    flex:1;
+    min-width:220px;
+}
+
+.filter-group label{
+    display:block;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+select{
+    width:100%;
+    padding:11px;
+    border:1px solid #CBD5CB;
+    border-radius:8px;
+    background:white;
+    font-size:14px;
+}
+
+/* KPI */
+
+.kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.kpi{
+    background:white;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    border-top:5px solid var(--green2);
+}
+
+.kpi .number{
+    font-size:29px;
+    font-weight:bold;
+    color:var(--green);
+}
+
+.kpi .label{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:7px;
+}
+
+.kpi button{
+    margin-top:12px;
+    border:0;
+    background:var(--light);
+    color:var(--green);
+    padding:7px 10px;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:12px;
+}
+
+.kpi-detail{
+    display:none;
+    margin-top:10px;
+    font-size:12px;
+    color:#555;
+    line-height:1.45;
+}
+
+/* SECTIONS */
+
+.section{
+    background:white;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    margin-bottom:25px;
+}
+
+.section h2{
+    color:var(--green);
+    margin-top:0;
+    border-bottom:2px solid var(--light);
+    padding-bottom:10px;
+}
+
+.section h3{
+    color:#33691E;
+}
+
+/* SUMMARY */
+
+.summary{
+    background:var(--lighter);
+    border-left:6px solid var(--green2);
+    padding:20px;
+    border-radius:8px;
+}
+
+.summary li{
+    margin-bottom:10px;
+}
+
+/* CHART GRID */
+
+.chart-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+}
+
+.chart-card{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:15px;
+    background:#fff;
+}
+
+.chart-card h3{
+    margin-top:0;
+}
+
+.chart-card img{
+    width:100%;
+    height:auto;
+    display:block;
+}
+
+/* TABLE */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th{
+    background:var(--green2);
+    color:white;
+    padding:10px;
+    text-align:left;
+    white-space:nowrap;
+}
+
+td{
+    padding:9px;
+    border-bottom:1px solid #ddd;
+}
+
+tr:nth-child(even){
+    background:#F7F9F7;
+}
+
+tr:hover{
+    background:#EAF5EA;
+}
+
+/* CALLOUT */
+
+.callout{
+    padding:20px;
+    background:#F1F8F1;
+    border-left:6px solid var(--green2);
+    border-radius:8px;
+    margin:15px 0;
+}
+
+/* STATUS */
+
+.status{
+    display:inline-block;
+    padding:4px 9px;
+    border-radius:15px;
+    font-size:12px;
+    font-weight:bold;
+    background:#E8F5E9;
+    color:#1B5E20;
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    padding:25px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+    .kpi-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:650px){
+    .container{
+        padding:12px;
+    }
+
+    .header{
+        padding:25px;
+    }
+
+    .header h1{
+        font-size:25px;
+    }
+
+    .kpi-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .chart-grid{
+        grid-template-columns:1fr;
+    }
+}
+
 </style>
 </head>
+
 <body>
 
-<h1>Bulimbo Mole Baseline Analysis</h1>
-<p class='small'>Automated analysis generated from the Kobo-labelled Excel export.</p>
+<div class="container">
 
-<h2>1. Executive summary</h2>
-<div class='callout'>
-<ul><li style='margin-bottom:10px;'>The baseline covers 161 farmers and 99 recorded variables.</li>
-<li style='margin-bottom:10px;'><b>Widespread infestation:</b> 149 farmers (92.5%) reported current signs of mole infestation. This indicates that mole infestation is a widespread issue within the surveyed Bulimbo farmers rather than being limited to a small number of farms.</li>
-<li style='margin-bottom:10px;'><b>Field evidence:</b> Active mole burrows or signs were observed on 134 farms (83.2%). This provides field-level evidence that the reported infestation is accompanied by observable mole activity.</li>
-<li style='margin-bottom:10px;'><b>Substantial infestation severity:</b> 137 farmers (85.1%) reported infestation scores of 3–5. The distribution of severity should be considered when selecting farmers and locations for subsequent FRN testing.</li>
-<li style='margin-bottom:10px;'><b>Crop-loss concern:</b> 59 farmers (36.6%) reported high or very high crop loss. This suggests that the FRN should document not only mole presence, but also the level and type of crop damage.</li>
-<li style='margin-bottom:10px;'><b>Existing farmer experimentation:</b> 55 farmers (34.2%) reported that they had previously attempted to control moles. These existing practices provide an important starting point for documenting farmer knowledge and identifying practices that can be tested or refined through the FRN.</li>
-<li style='margin-bottom:10px;'><b>Training gap:</b> 9 farmers (5.6%) reported receiving training on mole identification or control. This indicates limited exposure to formal mole management training among the surveyed farmers.</li>
-<li style='margin-bottom:10px;'><b>FRN implication:</b> The baseline provides a reference point for moving from problem identification to farmer-led testing. Future monitoring should retain the core indicators of infestation, severity, crop damage, control practices and observed outcomes so that changes can be assessed consistently over time.</li></ul>
+<!-- HEADER -->
+
+<div class="header">
+
+<h1>Bulimbo Mole Baseline Dashboard</h1>
+
+<p><strong>Farmer Research Network – Baseline Analysis</strong></p>
+
+<p>Analysis of mole infestation, severity, crop damage, farmer practices and support needs.</p>
+
+<span class="badge">Kobo-labelled Excel export • 161 farmers • 99 variables</span>
+
 </div>
 
-<h2>2. Key indicators</h2>
+
+<!-- FILTERS -->
+
+<div class="filters">
+
+<h3>Dashboard Filters</h3>
+
+<div class="filter-row">
+
+<div class="filter-group">
+
+<label for="villageFilter">Village</label>
+
+<select id="villageFilter" onchange="filterVillage()">
+
+<option value="all">All Villages</option>
+
+</select>
+
+</div>
+
+
+<div class="filter-group">
+
+<label for="severityFilter">Severity focus</label>
+
+<select id="severityFilter" onchange="filterSeverity()">
+
+<option value="all">All severity levels</option>
+<option value="3">Moderate and above (3–5)</option>
+<option value="4">Severe and above (4–5)</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- KPI CARDS -->
+
+<div class="kpi-grid">
+
+<div class="kpi">
+
+<div class="number" id="kpiFarmers">161</div>
+
+<div class="label">Farmers surveyed</div>
+
+<button onclick="toggleDetail('d1')">View details ▾</button>
+
+<div class="kpi-detail" id="d1">
+
+Total number of farmers included in the baseline survey.
+
+</div>
+
+</div>
+
+
+<div class="kpi">
+
+<div class="number">92.5%</div>
+
+<div class="label">Current infestation</div>
+
+<button onclick="toggleDetail('d2')">View details ▾</button>
+
+<div class="kpi-detail" id="d2">
+
+149 of 161 farmers reported current signs of mole infestation.
+
+</div>
+
+</div>
+
+
+<div class="kpi">
+
+<div class="number">83.2%</div>
+
+<div class="label">Observed mole activity</div>
+
+<button onclick="toggleDetail('d3')">View details ▾</button>
+
+<div class="kpi-detail" id="d3">
+
+134 farms had active mole burrows or signs observed during the visit.
+
+</div>
+
+</div>
+
+
+<div class="kpi">
+
+<div class="number">85.1%</div>
+
+<div class="label">Moderate–very severe</div>
+
+<button onclick="toggleDetail('d4')">View details ▾</button>
+
+<div class="kpi-detail" id="d4">
+
+137 farmers reported infestation scores between 3 and 5.
+
+</div>
+
+</div>
+
+
+<div class="kpi">
+
+<div class="number">36.6%</div>
+
+<div class="label">High / very high crop loss</div>
+
+<button onclick="toggleDetail('d5')">View details ▾</button>
+
+<div class="kpi-detail" id="d5">
+
+59 farmers reported high or very high crop loss.
+
+</div>
+
+</div>
+
+
+<div class="kpi">
+
+<div class="number">5.6%</div>
+
+<div class="label">Received training</div>
+
+<button onclick="toggleDetail('d6')">View details ▾</button>
+
+<div class="kpi-detail" id="d6">
+
+Only 9 farmers reported receiving training on mole identification or control.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- EXECUTIVE SUMMARY -->
+
+<div class="section">
+
+<h2>Executive Summary</h2>
+
+<div class="summary">
+
+<ul>
+
+<li><strong>Widespread infestation:</strong> 149 farmers (92.5%) reported current signs of mole infestation.</li>
+
+<li><strong>Field evidence:</strong> Active mole burrows or signs were observed on 134 farms (83.2%).</li>
+
+<li><strong>Substantial severity:</strong> 137 farmers (85.1%) reported infestation scores of 3–5.</li>
+
+<li><strong>Crop-loss concern:</strong> 59 farmers (36.6%) reported high or very high crop loss.</li>
+
+<li><strong>Existing experimentation:</strong> 55 farmers (34.2%) had previously attempted to control moles.</li>
+
+<li><strong>Training gap:</strong> Only 9 farmers (5.6%) reported receiving mole identification/control training.</li>
+
+<li><strong>Support demand:</strong> 155 farmers (96.3%) indicated that training on mole identification and control would help them manage infestation better.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+
+<!-- KEY INDICATORS -->
+
+<div class="section">
+
+<h2>Key Indicators</h2>
+
+<div class="table-wrap">
+
 <table>
-<tr><th>Indicator</th><th>N</th><th>Total</th><th>Percent</th></tr><tr><td>Farmers reporting current signs of mole infestation</td><td>149</td><td>161</td><td>92.5%</td></tr>
-<tr><td>Farms where active mole burrows/signs were observed during visit</td><td>134</td><td>161</td><td>83.2%</td></tr>
-<tr><td>Farmers who have previously tried to control moles</td><td> 55</td><td>161</td><td>34.2%</td></tr>
-<tr><td>Farmers who have received mole identification/control training</td><td>  9</td><td>161</td><td> 5.6%</td></tr>
-<tr><td>Farmers reporting moderate/severe/very severe infestation (score 3-5)</td><td>137</td><td>161</td><td>85.1%</td></tr>
-<tr><td>Farmers reporting high/very high crop loss</td><td> 59</td><td>161</td><td>36.6%</td></tr></table>
 
-<h2>3. Farmer profile</h2><p><b>Age summary</b></p><table><tr><th>Statistic</th><th>Value</th></tr><tr><td>N</td><td>161.0</td></tr><tr><td>Mean</td><td> 47.7</td></tr><tr><td>Median</td><td> 47.0</td></tr><tr><td>Minimum</td><td> 23.0</td></tr><tr><td>Maximum</td><td> 80.0</td></tr></table><p><b>Gender</b></p><table><tr><th>Gender</th><th>N</th><th>%</th></tr><tr><td>Female</td><td>93</td><td>57.8%</td></tr><tr><td>Male</td><td>68</td><td>42.2%</td></tr></table><h2>4. Mole infestation and severity</h2><h3>Current infestation severity</h3><img src='figures/01_infestation_severity.png' style='max-width:900px;width:100%;height:auto;'><table><tr><th>Severity</th><th>N</th><th>%</th></tr><tr><td>2 - Low</td><td>12</td><td> 7.5%</td></tr><tr><td>3 - Moderate</td><td>73</td><td>45.3%</td></tr><tr><td>4 - Severe</td><td>60</td><td>37.3%</td></tr><tr><td>5 - Very severe</td><td> 4</td><td> 2.5%</td></tr><tr><td>NA</td><td>12</td><td> 7.5%</td></tr></table><h2>5. Frequency and evidence of mole activity</h2><h3>Frequency of mole activity</h3><img src='figures/04_activity_frequency.png' style='max-width:900px;width:100%;height:auto;'><p>The table below summarises the selected signs of mole activity.</p>
-         <table><tr><th>Sign</th><th>N</th><th>% of all farmers</th></tr><tr><td>what signs of mole activity have you observed mole mounds heaps of soil</td><td>113</td><td>70.2%</td></tr><tr><td>what signs of mole activity have you observed underground tunnels ridges</td><td> 96</td><td>59.6%</td></tr><tr><td>what signs of mole activity have you observed damaged roots</td><td> 60</td><td>37.3%</td></tr><tr><td>what signs of mole activity have you observed wilting dying plants</td><td> 60</td><td>37.3%</td></tr><tr><td>what signs of mole activity have you observed plants uprooted missing</td><td> 22</td><td>13.7%</td></tr><tr><td>what signs of mole activity have you observed gnawed damaged crops</td><td> 11</td><td> 6.8%</td></tr><tr><td>what signs of mole activity have you observed other signs</td><td>  3</td><td> 1.9%</td></tr></table><h2>6. Crops and damage</h2><h3>Most affected crop</h3><img src='figures/02_most_affected_crop.png' style='max-width:900px;width:100%;height:auto;'><h3>Reported crop loss</h3><img src='figures/03_crop_loss.png' style='max-width:900px;width:100%;height:auto;'><table><tr><th>Damage indicator</th><th>N</th><th>% of all farmers</th></tr><tr><td>what types of damage have you observed plants damaged or uprooted</td><td>101</td><td>62.7%</td></tr><tr><td>what types of damage have you observed roots tubers damaged</td><td> 94</td><td>58.4%</td></tr><tr><td>what types of damage have you observed tunnels mounds interfering with field</td><td> 38</td><td>23.6%</td></tr><tr><td>what types of damage have you observed reduced crop yield</td><td> 23</td><td>14.3%</td></tr><tr><td>what types of damage have you observed seedlings destroyed</td><td>  8</td><td> 5.0%</td></tr><tr><td>what types of damage have you observed other</td><td>  2</td><td> 1.2%</td></tr></table><h2>7. Farmer control practices</h2><h3>Mole-control methods</h3><img src='figures/05_control_methods.png' style='max-width:900px;width:100%;height:auto;'><p><b>Reported effectiveness of previous control efforts</b></p>
-         <table><tr><th>Effectiveness</th><th>N</th><th>%</th></tr><tr><td>Effective</td><td> 17</td><td>10.6%</td></tr><tr><td>Not effective</td><td> 12</td><td> 7.5%</td></tr><tr><td>Not sure</td><td>  1</td><td> 0.6%</td></tr><tr><td>Partly effective</td><td> 23</td><td>14.3%</td></tr><tr><td>Very effective</td><td>  2</td><td> 1.2%</td></tr><tr><td>NA</td><td>106</td><td>65.8%</td></tr></table><h2>8. Training and support needs</h2><h3>Previous training</h3><img src='figures/06_training.png' style='max-width:900px;width:100%;height:auto;'><table><tr><th>Support</th><th>N</th><th>% of all farmers</th></tr><tr><td>what support would help you manage mole infestation better training on mole identification and control</td><td>155</td><td>96.3%</td></tr><tr><td>what support would help you manage mole infestation better access to affordable traps</td><td> 90</td><td>55.9%</td></tr><tr><td>what support would help you manage mole infestation better practical demonstrations</td><td> 84</td><td>52.2%</td></tr><tr><td>what support would help you manage mole infestation better follow up technical support</td><td> 62</td><td>38.5%</td></tr><tr><td>what support would help you manage mole infestation better participation in on farm trials</td><td> 62</td><td>38.5%</td></tr><tr><td>what support would help you manage mole infestation better information extension materials</td><td> 38</td><td>23.6%</td></tr><tr><td>what support would help you manage mole infestation better other</td><td>  0</td><td> 0.0%</td></tr></table><h2>9. Potential hotspots</h2><table><tr><th>Village</th><th>Farmers</th><th>Current infestation N</th><th>Current infestation %</th></tr><tr><td>Panyako</td><td>9</td><td>9</td><td>100%</td></tr><tr><td>Mukhweya C</td><td>8</td><td>8</td><td>100%</td></tr><tr><td>MukhweyaC</td><td>8</td><td>8</td><td>100%</td></tr><tr><td>Shibanze</td><td>8</td><td>8</td><td>100%</td></tr><tr><td>MukhweyaB</td><td>6</td><td>6</td><td>100%</td></tr><tr><td>Eshibanze</td><td>5</td><td>5</td><td>100%</td></tr><tr><td>Lukusi town</td><td>5</td><td>5</td><td>100%</td></tr><tr><td>Bulimbo A</td><td>4</td><td>4</td><td>100%</td></tr><tr><td>Mabonga</td><td>4</td><td>4</td><td>100%</td></tr><tr><td>Makunda B</td><td>4</td><td>4</td><td>100%</td></tr><tr><td>Namulungu</td><td>4</td><td>4</td><td>100%</td></tr><tr><td>Namulungu AC</td><td>3</td><td>3</td><td>100%</td></tr><tr><td>ShibaleB</td><td>3</td><td>3</td><td>100%</td></tr><tr><td>Bulimbo B</td><td>2</td><td>2</td><td>100%</td></tr><tr><td>Makunda C</td><td>2</td><td>2</td><td>100%</td></tr><tr><td>Matola</td><td>2</td><td>2</td><td>100%</td></tr><tr><td>Mukweya B</td><td>2</td><td>2</td><td>100%</td></tr><tr><td>Namasanda B</td><td>2</td><td>2</td><td>100%</td></tr><tr><td>Panyako c</td><td>2</td><td>2</td><td>100%</td></tr><tr><td>Shiabo</td><td>2</td><td>2</td><td>100%</td></tr></table>
-         <p class='small'>Hotspot percentages should be interpreted alongside the number of farmers represented in each village.</p><h2>10. Moderate-to-very-severe infestation by village</h2><h3>Moderate-to-very-severe infestation by village</h3><img src='figures/07_moderate_to_very_severe_by_village.png' style='max-width:900px;width:100%;height:auto;'><table>
-    <tr>
-      <th>Village</th>
-      <th>Farmers surveyed</th>
-      <th>Moderate-to-very-severe N</th>
-      <th>Percent</th>
-    </tr><tr>
-            <td>Mukhweya C</td>
-            <td> 8</td>
-            <td> 8</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>MukhweyaC</td>
-            <td> 8</td>
-            <td> 8</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Shibanze</td>
-            <td> 8</td>
-            <td> 8</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Khabukoshe</td>
-            <td> 7</td>
-            <td> 7</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>MukhweyaB</td>
-            <td> 6</td>
-            <td> 6</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Mukhweya</td>
-            <td> 5</td>
-            <td> 5</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Ebusishe</td>
-            <td> 4</td>
-            <td> 4</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Khabimbi</td>
-            <td> 4</td>
-            <td> 4</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Mabonga</td>
-            <td> 4</td>
-            <td> 4</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Makunda B</td>
-            <td> 4</td>
-            <td> 4</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Namulungu</td>
-            <td> 4</td>
-            <td> 4</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Namulungu AC</td>
-            <td> 3</td>
-            <td> 3</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>ShibaleB</td>
-            <td> 3</td>
-            <td> 3</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Bukananachi B</td>
-            <td> 2</td>
-            <td> 2</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Bulimbo B</td>
-            <td> 2</td>
-            <td> 2</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Makunda C</td>
-            <td> 2</td>
-            <td> 2</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Matola</td>
-            <td> 2</td>
-            <td> 2</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Panyako c</td>
-            <td> 2</td>
-            <td> 2</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Shiabo</td>
-            <td> 2</td>
-            <td> 2</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Shibale A</td>
-            <td> 2</td>
-            <td> 2</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Shibale B</td>
-            <td> 2</td>
-            <td> 2</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Burimba A</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Ematola</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Eshibanze A</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Eshibanze B</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Habukoshe</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Mukhweya B</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Mukweya</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Namulungu Catholic</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Panyako c group</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>weyaba</td>
-            <td> 1</td>
-            <td> 1</td>
-            <td>100.0%</td>
-            </tr><tr>
-            <td>Namasanda</td>
-            <td>11</td>
-            <td>10</td>
-            <td> 90.9%</td>
-            </tr><tr>
-            <td>Shiyabo</td>
-            <td>16</td>
-            <td>14</td>
-            <td> 87.5%</td>
-            </tr><tr>
-            <td>Eshibanze</td>
-            <td> 5</td>
-            <td> 4</td>
-            <td> 80.0%</td>
-            </tr><tr>
-            <td>Panyako</td>
-            <td> 9</td>
-            <td> 7</td>
-            <td> 77.8%</td>
-            </tr><tr>
-            <td>Bulimbo A</td>
-            <td> 4</td>
-            <td> 3</td>
-            <td> 75.0%</td>
-            </tr><tr>
-            <td>Lukusi town</td>
-            <td> 5</td>
-            <td> 3</td>
-            <td> 60.0%</td>
-            </tr><tr>
-            <td>Mukweya B</td>
-            <td> 2</td>
-            <td> 1</td>
-            <td> 50.0%</td>
-            </tr><tr>
-            <td>Namasanda B</td>
-            <td> 2</td>
-            <td> 1</td>
-            <td> 50.0%</td>
-            </tr><tr>
-            <td>Mundubi</td>
-            <td> 1</td>
-            <td> 0</td>
-            <td>  0.0%</td>
-            </tr></table><h2>11. Farmer follow-up by village</h2><p>This summary links village-level severity to the individual farmer records. The full names and contacts are kept in the Excel workbook under the <b>Farmers by Village</b> and <b>Priority Farmers 3-5</b> sheets.</p><table><tr><th>Village</th><th>Farmers surveyed</th><th>Moderate-to-very-severe N</th><th>Moderate-to-very-severe %</th><th>Severe-to-very-severe N</th><th>Severe-to-very-severe %</th></tr><tr><td>Mukhweya C</td><td> 8</td><td> 8</td><td>100.0%</td><td>7</td><td> 87.5%</td></tr><tr><td>MukhweyaC</td><td> 8</td><td> 8</td><td>100.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Shibanze</td><td> 8</td><td> 8</td><td>100.0%</td><td>1</td><td> 12.5%</td></tr><tr><td>MukhweyaB</td><td> 6</td><td> 6</td><td>100.0%</td><td>2</td><td> 33.3%</td></tr><tr><td>Mabonga</td><td> 4</td><td> 4</td><td>100.0%</td><td>3</td><td> 75.0%</td></tr><tr><td>Makunda B</td><td> 4</td><td> 4</td><td>100.0%</td><td>1</td><td> 25.0%</td></tr><tr><td>Namulungu</td><td> 4</td><td> 4</td><td>100.0%</td><td>3</td><td> 75.0%</td></tr><tr><td>Namulungu AC</td><td> 3</td><td> 3</td><td>100.0%</td><td>2</td><td> 66.7%</td></tr><tr><td>ShibaleB</td><td> 3</td><td> 3</td><td>100.0%</td><td>1</td><td> 33.3%</td></tr><tr><td>Bulimbo B</td><td> 2</td><td> 2</td><td>100.0%</td><td>1</td><td> 50.0%</td></tr><tr><td>Makunda C</td><td> 2</td><td> 2</td><td>100.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Matola</td><td> 2</td><td> 2</td><td>100.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Panyako c</td><td> 2</td><td> 2</td><td>100.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Shiabo</td><td> 2</td><td> 2</td><td>100.0%</td><td>1</td><td> 50.0%</td></tr><tr><td>Shibale A</td><td> 2</td><td> 2</td><td>100.0%</td><td>2</td><td>100.0%</td></tr><tr><td>Shibale B</td><td> 2</td><td> 2</td><td>100.0%</td><td>1</td><td> 50.0%</td></tr><tr><td>Burimba A</td><td> 1</td><td> 1</td><td>100.0%</td><td>1</td><td>100.0%</td></tr><tr><td>Ematola</td><td> 1</td><td> 1</td><td>100.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Eshibanze A</td><td> 1</td><td> 1</td><td>100.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Eshibanze B</td><td> 1</td><td> 1</td><td>100.0%</td><td>1</td><td>100.0%</td></tr><tr><td>Mukhweya B</td><td> 1</td><td> 1</td><td>100.0%</td><td>1</td><td>100.0%</td></tr><tr><td>Mukweya</td><td> 1</td><td> 1</td><td>100.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Namulungu Catholic</td><td> 1</td><td> 1</td><td>100.0%</td><td>1</td><td>100.0%</td></tr><tr><td>Panyako c group</td><td> 1</td><td> 1</td><td>100.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>weyaba</td><td> 1</td><td> 1</td><td>100.0%</td><td>1</td><td>100.0%</td></tr><tr><td>Khabukoshe</td><td> 8</td><td> 7</td><td> 87.5%</td><td>3</td><td> 37.5%</td></tr><tr><td>Mukhweya</td><td> 6</td><td> 5</td><td> 83.3%</td><td>3</td><td> 50.0%</td></tr><tr><td>Shiyabo</td><td>17</td><td>14</td><td> 82.4%</td><td>5</td><td> 29.4%</td></tr><tr><td>Eshibanze</td><td> 5</td><td> 4</td><td> 80.0%</td><td>2</td><td> 40.0%</td></tr><tr><td>Khabimbi</td><td> 5</td><td> 4</td><td> 80.0%</td><td>2</td><td> 40.0%</td></tr><tr><td>Panyako</td><td> 9</td><td> 7</td><td> 77.8%</td><td>3</td><td> 33.3%</td></tr><tr><td>Namasanda</td><td>13</td><td>10</td><td> 76.9%</td><td>9</td><td> 69.2%</td></tr><tr><td>Bulimbo A</td><td> 4</td><td> 3</td><td> 75.0%</td><td>1</td><td> 25.0%</td></tr><tr><td>Ebusishe</td><td> 6</td><td> 4</td><td> 66.7%</td><td>1</td><td> 16.7%</td></tr><tr><td>Bukananachi B</td><td> 3</td><td> 2</td><td> 66.7%</td><td>1</td><td> 33.3%</td></tr><tr><td>Lukusi town</td><td> 5</td><td> 3</td><td> 60.0%</td><td>1</td><td> 20.0%</td></tr><tr><td>Habukoshe</td><td> 2</td><td> 1</td><td> 50.0%</td><td>1</td><td> 50.0%</td></tr><tr><td>Mukweya B</td><td> 2</td><td> 1</td><td> 50.0%</td><td>1</td><td> 50.0%</td></tr><tr><td>Namasanda B</td><td> 2</td><td> 1</td><td> 50.0%</td><td>1</td><td> 50.0%</td></tr><tr><td>Makadara</td><td> 1</td><td> 0</td><td>  0.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Mundubi</td><td> 1</td><td> 0</td><td>  0.0%</td><td>0</td><td>  0.0%</td></tr><tr><td>Weyaba</td><td> 1</td><td> 0</td><td>  0.0%</td><td>0</td><td>  0.0%</td></tr></table><h2>12. Statistical tests</h2><table><tr><th>Test</th><th>Variables</th><th>Statistic</th><th>p-value</th><th>Interpretation</th></tr><tr><td>Chi-square</td><td>Gender vs current mole infestation</td><td>0.119208902168791</td><td>0.7299</td><td>No statistically detectable association in this sample.</td></tr><tr><td>Chi-square</td><td>Gender vs infestation score 3-5</td><td>0.158377975391799</td><td>0.6907</td><td>No statistically detectable association in this sample.</td></tr></table>
-         <p class='small'>Statistical tests identify patterns in this dataset; they do not establish causation.</p><h2>13. Data-quality notes</h2>
-<p>The automated check flags variables with substantial missingness and variables that are completely blank.</p><p><b>Completely blank variables:</b> if_other_specify_74, thank_you_the_information_collected_will_help_establish_the_baseline_extent_and_severity_of_mole_infestation_among_bulimbo_farmers_and_guide_appropriate_control_interventions, how_many_of_your_fields_are_currently_affected_by_moles, have_you_experienced_mole_infestation_on_your_farm_before, for_approximately_how_many_years_have_you_experienced_mole_infestation, compared_with_previous_seasons_how_has_mole_infestation_changed, when_is_mole_infestation_usually_most_serious, validation_status</p><p>Review the data-quality workbook before using the findings for formal reporting. In particular, distinguish true 'No' responses from questions that were skipped because of Kobo relevance/skip logic.</p>
+<tr>
+<th>Indicator</th>
+<th>N</th>
+<th>Total</th>
+<th>Percent</th>
+</tr>
 
-<h2>14. Programme interpretation</h2>
-<div class='callout'>
-<p>This report is designed to support the Bulimbo Farmer Research Network. The results should be used to identify the extent and distribution of the problem, understand existing farmer practices, and guide the next stage of farmer-led experimentation. Where the data show association rather than causation, the report deliberately avoids treating the relationship as proof of an intervention effect.</p>
+<tr>
+<td>Current signs of mole infestation</td>
+<td>149</td>
+<td>161</td>
+<td>92.5%</td>
+</tr>
+
+<tr>
+<td>Active mole burrows/signs observed</td>
+<td>134</td>
+<td>161</td>
+<td>83.2%</td>
+</tr>
+
+<tr>
+<td>Previously tried mole control</td>
+<td>55</td>
+<td>161</td>
+<td>34.2%</td>
+</tr>
+
+<tr>
+<td>Received mole training</td>
+<td>9</td>
+<td>161</td>
+<td>5.6%</td>
+</tr>
+
+<tr>
+<td>Moderate/severe/very severe infestation</td>
+<td>137</td>
+<td>161</td>
+<td>85.1%</td>
+</tr>
+
+<tr>
+<td>High/very high crop loss</td>
+<td>59</td>
+<td>161</td>
+<td>36.6%</td>
+</tr>
+
+</table>
+
 </div>
+
+</div>
+
+
+<!-- FARMER PROFILE -->
+
+<div class="section">
+
+<h2>Farmer Profile</h2>
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<h3>Age Summary</h3>
+
+<table>
+
+<tr><th>Statistic</th><th>Value</th></tr>
+
+<tr><td>Farmers</td><td>161</td></tr>
+
+<tr><td>Mean age</td><td>47.7 years</td></tr>
+
+<tr><td>Median age</td><td>47 years</td></tr>
+
+<tr><td>Minimum age</td><td>23 years</td></tr>
+
+<tr><td>Maximum age</td><td>80 years</td></tr>
+
+</table>
+
+</div>
+
+
+<div class="chart-card">
+
+<h3>Gender Distribution</h3>
+
+<table>
+
+<tr><th>Gender</th><th>N</th><th>%</th></tr>
+
+<tr><td>Female</td><td>93</td><td>57.8%</td></tr>
+
+<tr><td>Male</td><td>68</td><td>42.2%</td></tr>
+
+</table>
+
+<div class="callout">
+
+Female farmers represented the majority of respondents in the baseline.
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- INFESTATION -->
+
+<div class="section">
+
+<h2>Mole Infestation and Severity</h2>
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<h3>Current Infestation Severity</h3>
+
+<img src="01_infestation_severity.png" alt="Current infestation severity">
+
+</div>
+
+
+<div class="chart-card">
+
+<h3>Severity Distribution</h3>
+
+<table>
+
+<tr><th>Severity</th><th>N</th><th>%</th></tr>
+
+<tr><td>2 – Low</td><td>12</td><td>7.5%</td></tr>
+
+<tr><td>3 – Moderate</td><td>73</td><td>45.3%</td></tr>
+
+<tr><td>4 – Severe</td><td>60</td><td>37.3%</td></tr>
+
+<tr><td>5 – Very severe</td><td>4</td><td>2.5%</td></tr>
+
+<tr><td>Missing / NA</td><td>12</td><td>7.5%</td></tr>
+
+</table>
+
+<div class="callout">
+
+<strong>Key message:</strong> Moderate infestation was the most common recorded severity level, followed by severe infestation.
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ACTIVITY -->
+
+<div class="section">
+
+<h2>Mole Activity and Field Evidence</h2>
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<h3>Frequency of Mole Activity</h3>
+
+<img src="04_activity_frequency.png" alt="Frequency of mole activity">
+
+</div>
+
+
+<div class="chart-card">
+
+<h3>Observed Signs</h3>
+
+<table>
+
+<tr><th>Sign</th><th>N</th><th>%</th></tr>
+
+<tr><td>Mole mounds / heaps of soil</td><td>113</td><td>70.2%</td></tr>
+
+<tr><td>Underground tunnels / ridges</td><td>96</td><td>59.6%</td></tr>
+
+<tr><td>Damaged roots</td><td>60</td><td>37.3%</td></tr>
+
+<tr><td>Wilting / dying plants</td><td>60</td><td>37.3%</td></tr>
+
+<tr><td>Plants uprooted / missing</td><td>22</td><td>13.7%</td></tr>
+
+<tr><td>Gnawed / damaged crops</td><td>11</td><td>6.8%</td></tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CROPS -->
+
+<div class="section">
+
+<h2>Crops and Crop Damage</h2>
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<h3>Most Affected Crop</h3>
+
+<img src="02_most_affected_crop.png" alt="Most affected crop">
+
+</div>
+
+
+<div class="chart-card">
+
+<h3>Reported Crop Loss</h3>
+
+<img src="03_crop_loss.png" alt="Reported crop loss">
+
+</div>
+
+</div>
+
+
+<h3>Types of Damage Reported</h3>
+
+<table>
+
+<tr><th>Damage indicator</th><th>N</th><th>%</th></tr>
+
+<tr><td>Plants damaged or uprooted</td><td>101</td><td>62.7%</td></tr>
+
+<tr><td>Roots / tubers damaged</td><td>94</td><td>58.4%</td></tr>
+
+<tr><td>Tunnels / mounds interfering with field</td><td>38</td><td>23.6%</td></tr>
+
+<tr><td>Reduced crop yield</td><td>23</td><td>14.3%</td></tr>
+
+<tr><td>Seedlings destroyed</td><td>8</td><td>5.0%</td></tr>
+
+</table>
+
+</div>
+
+
+<!-- CONTROL -->
+
+<div class="section">
+
+<h2>Farmer Control Practices</h2>
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<h3>Mole-Control Methods</h3>
+
+<img src="05_control_methods.png" alt="Mole control methods">
+
+</div>
+
+
+<div class="chart-card">
+
+<h3>Reported Effectiveness</h3>
+
+<table>
+
+<tr><th>Effectiveness</th><th>N</th><th>%</th></tr>
+
+<tr><td>Effective</td><td>17</td><td>10.6%</td></tr>
+
+<tr><td>Not effective</td><td>12</td><td>7.5%</td></tr>
+
+<tr><td>Not sure</td><td>1</td><td>0.6%</td></tr>
+
+<tr><td>Partly effective</td><td>23</td><td>14.3%</td></tr>
+
+<tr><td>Very effective</td><td>2</td><td>1.2%</td></tr>
+
+<tr><td>NA</td><td>106</td><td>65.8%</td></tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- TRAINING -->
+
+<div class="section">
+
+<h2>Training and Support Needs</h2>
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<h3>Previous Training</h3>
+
+<img src="06_training.png" alt="Previous training">
+
+</div>
+
+
+<div class="chart-card">
+
+<h3>Support Requested</h3>
+
+<table>
+
+<tr><th>Support</th><th>N</th><th>%</th></tr>
+
+<tr><td>Training on mole identification and control</td><td>155</td><td>96.3%</td></tr>
+
+<tr><td>Access to affordable traps</td><td>90</td><td>55.9%</td></tr>
+
+<tr><td>Practical demonstrations</td><td>84</td><td>52.2%</td></tr>
+
+<tr><td>Follow-up technical support</td><td>62</td><td>38.5%</td></tr>
+
+<tr><td>Participation in on-farm trials</td><td>62</td><td>38.5%</td></tr>
+
+<tr><td>Information / extension materials</td><td>38</td><td>23.6%</td></tr>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="callout">
+
+<strong>Programme implication:</strong> The very high demand for training provides a strong entry point for farmer-led learning and experimentation.
+
+</div>
+
+</div>
+
+
+<!-- VILLAGE -->
+
+<div class="section">
+
+<h2>Village-Level Infestation</h2>
+
+<p>
+
+Use the village filter above to focus on individual locations. Village percentages should always be interpreted alongside the number of farmers surveyed.
+
+</p>
+
+<div class="chart-card">
+
+<img src="07_moderate_to_very_severe_by_village.png"
+alt="Moderate to very severe infestation by village">
+
+</div>
+
+
+<div class="table-wrap">
+
+<table id="villageTable">
+
+<thead>
+
+<tr>
+
+<th>Village</th>
+<th>Farmers</th>
+<th>Moderate–Very Severe</th>
+<th>Percent</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr><td>Panyako</td><td>9</td><td>7</td><td>77.8%</td></tr>
+<tr><td>Mukhweya C</td><td>8</td><td>8</td><td>100.0%</td></tr>
+<tr><td>MukhweyaC</td><td>8</td><td>8</td><td>100.0%</td></tr>
+<tr><td>Shibanze</td><td>8</td><td>8</td><td>100.0%</td></tr>
+<tr><td>Khabukoshe</td><td>7</td><td>7</td><td>100.0%</td></tr>
+<tr><td>MukhweyaB</td><td>6</td><td>6</td><td>100.0%</td></tr>
+<tr><td>Mukhweya</td><td>6</td><td>5</td><td>83.3%</td></tr>
+<tr><td>Eshibanze</td><td>5</td><td>4</td><td>80.0%</td></tr>
+<tr><td>Khabimbi</td><td>5</td><td>4</td><td>80.0%</td></tr>
+<tr><td>Lukusi town</td><td>5</td><td>3</td><td>60.0%</td></tr>
+<tr><td>Namasanda</td><td>13</td><td>10</td><td>76.9%</td></tr>
+<tr><td>Shiyabo</td><td>17</td><td>14</td><td>82.4%</td></tr>
+<tr><td>Bulimbo A</td><td>4</td><td>3</td><td>75.0%</td></tr>
+<tr><td>Ebusishe</td><td>6</td><td>4</td><td>66.7%</td></tr>
+<tr><td>Bukananachi B</td><td>3</td><td>2</td><td>66.7%</td></tr>
+<tr><td>Habukoshe</td><td>2</td><td>1</td><td>50.0%</td></tr>
+<tr><td>Mukweya B</td><td>2</td><td>1</td><td>50.0%</td></tr>
+<tr><td>Namasanda B</td><td>2</td><td>1</td><td>50.0%</td></tr>
+<tr><td>Makadara</td><td>1</td><td>0</td><td>0.0%</td></tr>
+<tr><td>Mundubi</td><td>1</td><td>0</td><td>0.0%</td></tr>
+<tr><td>Weyaba</td><td>1</td><td>0</td><td>0.0%</td></tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="section">
+
+<h2>Statistical Tests</h2>
+
+<table>
+
+<tr>
+
+<th>Test</th>
+<th>Variables</th>
+<th>Statistic</th>
+<th>p-value</th>
+<th>Interpretation</th>
+
+</tr>
+
+<tr>
+
+<td>Chi-square</td>
+
+<td>Gender vs current mole infestation</td>
+
+<td>0.1192</td>
+
+<td>0.7299</td>
+
+<td><span class="status">No statistically detectable association</span></td>
+
+</tr>
+
+<tr>
+
+<td>Chi-square</td>
+
+<td>Gender vs infestation score 3–5</td>
+
+<td>0.1584</td>
+
+<td>0.6907</td>
+
+<td><span class="status">No statistically detectable association</span></td>
+
+</tr>
+
+</table>
+
+<div class="callout">
+
+Statistical tests identify patterns in this dataset; they do not establish causation.
+
+</div>
+
+</div>
+
+
+<!-- DATA QUALITY -->
+
+<div class="section">
+
+<h2>Data Quality</h2>
+
+<div class="callout">
+
+<p>
+
+The automated check identified variables with substantial missingness and variables that were completely blank.
+
+</p>
+
+<p>
+
+<strong>Completely blank variables:</strong>
+
+if_other_specify_74, how_many_of_your_fields_are_currently_affected_by_moles,
+have_you_experienced_mole_infestation_on_your_farm_before,
+for_approximately_how_many_years_have_you_experienced_mole_infestation,
+compared_with_previous_seasons_how_has_mole_infestation_changed,
+when_is_mole_infestation_usually_most_serious, validation_status.
+
+</p>
+
+<p>
+
+Review the data-quality workbook before using the findings for formal reporting. In particular, distinguish true “No” responses from questions skipped because of Kobo relevance or skip logic.
+
+</p>
+
+</div>
+
+</div>
+
+
+<!-- PROGRAMME INTERPRETATION -->
+
+<div class="section">
+
+<h2>Programme Interpretation</h2>
+
+<div class="callout">
+
+<p>
+
+This dashboard supports the Bulimbo Farmer Research Network by providing a baseline reference for the extent and distribution of mole infestation, severity, crop damage, farmer practices and support needs.
+
+</p>
+
+<p>
+
+The findings can guide the next stage of farmer-led experimentation and monitoring. Future monitoring should retain the core indicators of infestation, severity, crop damage, control practices and observed outcomes so that changes can be assessed consistently over time.
+
+</p>
+
+</div>
+
+</div>
+
+
+<div class="footer">
+
+Bulimbo Mole Baseline Analysis • Farmer Research Network
+
+</div>
+
+</div>
+
+
+<script>
+
+/* KPI DROPDOWNS */
+
+function toggleDetail(id){
+
+    const element=document.getElementById(id);
+
+    if(element.style.display==="block"){
+
+        element.style.display="none";
+
+    }else{
+
+        element.style.display="block";
+
+    }
+
+}
+
+
+/* VILLAGE LIST */
+
+const villageRows=document.querySelectorAll("#villageTable tbody tr");
+
+const villageFilter=document.getElementById("villageFilter");
+
+const villages=[];
+
+villageRows.forEach(row=>{
+
+    const village=row.cells[0].textContent.trim();
+
+    if(!villages.includes(village)){
+
+        villages.push(village);
+
+    }
+
+});
+
+villages.sort();
+
+villages.forEach(village=>{
+
+    const option=document.createElement("option");
+
+    option.value=village;
+
+    option.textContent=village;
+
+    villageFilter.appendChild(option);
+
+});
+
+
+/* VILLAGE FILTER */
+
+function filterVillage(){
+
+    const selected=villageFilter.value;
+
+    villageRows.forEach(row=>{
+
+        const village=row.cells[0].textContent.trim();
+
+        if(selected==="all" || village===selected){
+
+            row.style.display="";
+
+        }else{
+
+            row.style.display="none";
+
+        }
+
+    });
+
+}
+
+
+/* SEVERITY FILTER */
+
+function filterSeverity(){
+
+    const selected=document.getElementById("severityFilter").value;
+
+    const title=document.querySelector(".filters h3");
+
+    if(selected==="3"){
+
+        title.textContent="Dashboard Filters – Moderate to Very Severe focus";
+
+    }
+
+    else if(selected==="4"){
+
+        title.textContent="Dashboard Filters – Severe to Very Severe focus";
+
+    }
+
+    else{
+
+        title.textContent="Dashboard Filters";
+
+    }
+
+}
+
+</script>
 
 </body>
+
 </html>
